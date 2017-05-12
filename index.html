@@ -33,13 +33,13 @@
 			cxt.lineWidth = "30";//线条宽度
 			cxt.lineCap = "round";//向线条的每个末端添加圆形线帽。
 			ca.onmousedown = function (event) {//当元素上按下鼠标按钮时触发。
-				var ev = ev || window.event;
+				var ev = event || window.event;
 				var lastw = ev.clientX - ca.offsetLeft;//获取鼠标相对于canvas画布上的X值
 				var lasth = ev.clientY - ca.offsetTop;//获取鼠标相对于canvas画布上的H值
 				cxt.lineTo(lastw,lasth);//添加一个新点，然后在画布中创建从该点到最后指定点的线条
 				cxt.beginPath();//起始一条路径，或重置当前路径
 				ca.onmousemove = function(event){//当鼠标指针移动到元素上时触发。
-					var ev = ev || window.event;
+					var ev = event || window.event;
 					var lastw = ev.clientX - ca.offsetLeft;//获取鼠标相对于canvas画布上的X值
 					var lasth = ev.clientY - ca.offsetTop;//获取鼠标相对于canvas画布上的H值
 					cxt.lineTo(lastw,lasth);//添加一个新点，然后在画布中创建从该点到最后指定点的线条
