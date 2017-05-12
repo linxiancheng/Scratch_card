@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>刮刮奖</title>
+</head>
+<style type="text/css">
+	*{margin: 0;padding: 0;font-family: "Times New Roman", Times, Baskerville, Georgia, serif;}
+	.container{margin: 0 auto;text-align: center;}
+	.container canvas{cursor: pointer;background-size: cover;}
+	#box{font-weight: bold;}
+</style>
+<body>
+	<div class="container">
+		<h3>请开始抽奖</h3>
+		<canvas id="ca" width="300" height="200"></canvas>
+		<div id="box"></div>
+		<script type="text/javascript">
+			var ca = document.getElementById("ca");//获取ID
+			var box = document.getElementById("box");//获取ID
+			var imgArr = ["./img/1等奖.png","./img/0等奖.png","./img/2等奖.png","./img/3等奖.png","./img/特等奖.png"];//控制背景的路径
+			var index =parseInt(Math.random()*(imgArr.length));//随机返回一个索引数
+			var currentImage=imgArr[index];//得到数组中的参数
+			ca.style.background="url("+currentImage+") no-repeat";//设置背景图
+			ca.style.backgroundSize = 'cover';//设置背景图填满
+			var imgUrl = ca.style.backgroundImage;//得到背景图
+			var w = ca.width;//得到ID的宽度
+			var h = ca.height;//得到ID的高度
+			var cxt = ca.getContext("2d");//转换成画板
+			cxt.fillStyle = "lightgray";//灰色
+			cxt.fillRect(0,0,w,h);//绘制一个与设置好宽高的块
+			cxt.globalCompositeOperation = "destination-out";//在源图像外显示目标图像。只有源图像外的目标图像部分会被显示，源图像是透明的。
+			cxt.lineWidth = "30";//线条宽度
+			cxt.lineCap = "round";//向线条的每个末端添加圆形线帽。
+			ca.onmousedown = function (event) {//当元素上按下鼠标按钮时触发。
+				var ev = ev || window.event;
+				var lastw = ev.clientX - ca.offsetLeft;//获取鼠标相对于canvas画布上的X值
+				var lasth = ev.clientY - ca.offsetTop;//获取鼠标相对于canvas画布上的H值
+				cxt.lineTo(lastw,lasth);//添加一个新点，然后在画布中创建从该点到最后指定点的线条
+				cxt.beginPath();//起始一条路径，或重置当前路径
+				ca.onmousemove = function(event){//当鼠标指针移动到元素上时触发。
+					var ev = ev || window.event;
+					var lastw = ev.clientX - ca.offsetLeft;//获取鼠标相对于canvas画布上的X值
+					var lasth = ev.clientY - ca.offsetTop;//获取鼠标相对于canvas画布上的H值
+					cxt.lineTo(lastw,lasth);//添加一个新点，然后在画布中创建从该点到最后指定点的线条
+					cxt.stroke();//绘制已定义的路径
+				}
+				ca.onmouseup = function(event){//当在元素上释放鼠标按钮时触发。
+					ca.onmousemove = null;//清除方法
+					getTransparent();//在这里调用获取面积比的方法，来提示用户是否中奖
+				}
+			}
+			function getTransparent(){
+				var tr = 0;
+				var notr = 0;
+				cxt.getImageData(0,0,w,h).data.forEach(function(item,index){
+					if (index%4 == 3) {
+						tr++;
+					}else if(item == 255){
+						notr++;
+					}
+				});
+				if (notr>300) {
+							cxt.beginPath();
+							cxt.moveTo(0,150);
+							cxt.lineTo(500,150);
+							cxt.lineWidth = "300";
+							cxt.stroke();
+							if (imgUrl == 'url("./img/特等奖.png")') {
+									box.innerHTML="恭喜获得特等奖";
+								} else if(imgUrl == 'url("./img/1等奖.png")') {
+									box.innerHTML="恭喜获得一等奖";
+								}else if(imgUrl == 'url("./img/2等奖.png")') {
+									box.innerHTML="恭喜获得二等奖";
+								}else if(imgUrl == 'url("./img/3等奖.png")') {
+									box.innerHTML="恭喜获得三等奖";
+								}else {
+									box.innerHTML="很遗憾，未中奖！";
+								}
+					}
+				console.log("tr:"+ tr);
+				console.log("notr:"+ notr);
+				console.log("比例:"+ tr/(notr+tr));
+			}
+			console.log(cxt.getImageData(0,0,500,300).data);
+			
+		</script>
+	</div>
+</body>
+</html>
