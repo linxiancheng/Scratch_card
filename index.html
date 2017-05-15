@@ -21,9 +21,8 @@
 			var imgArr = ["./img/1等奖.png","./img/0等奖.png","./img/2等奖.png","./img/3等奖.png","./img/特等奖.png"];//控制背景的路径
 			var index =parseInt(Math.random()*(imgArr.length));//随机返回一个索引数
 			var currentImage=imgArr[index];//得到数组中的参数
-			ca.style.background="url("+currentImage+") no-repeat";//设置背景图
-			ca.style.backgroundSize = 'cover';//设置背景图填满
-			var imgUrl = ca.style.backgroundImage;//得到背景图
+			
+			
 			var w = ca.width;//得到ID的宽度
 			var h = ca.height;//得到ID的高度
 			var cxt = ca.getContext("2d");//转换成画板
@@ -39,6 +38,8 @@
 				cxt.lineTo(lastw,lasth);//添加一个新点，然后在画布中创建从该点到最后指定点的线条
 				cxt.beginPath();//起始一条路径，或重置当前路径
 				ca.onmousemove = function(event){//当鼠标指针移动到元素上时触发。
+					ca.style.background="url("+currentImage+") no-repeat";//设置背景图
+					ca.style.backgroundSize = 'cover';//设置背景图填满
 					var ev = event || window.event;
 					var lastw = ev.clientX - ca.offsetLeft;//获取鼠标相对于canvas画布上的X值
 					var lasth = ev.clientY - ca.offsetTop;//获取鼠标相对于canvas画布上的H值
@@ -61,6 +62,7 @@
 					}
 				});
 				if (notr>300) {
+					var imgUrl = ca.style.backgroundImage;//得到背景图
 							cxt.beginPath();
 							cxt.moveTo(0,150);
 							cxt.lineTo(500,150);
